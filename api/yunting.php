@@ -1,0 +1,20 @@
+<?php
+error_reporting(0);
+$id = isset($_GET['id'])?$_GET['id']:639;
+$date = date('Y-m-d');
+$url = "https://ytapi.radio.cn/ytsrv/srv/interactive/program/list";
+$post = "startdate=&enddate={$date}&broadCastId=".$id;
+$ch = curl_init($url);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+curl_setopt($ch, CURLOPT_HTTPHEADER,["equipmentsource: WEB"]);
+curl_setopt($ch, CURLOPT_POST,1);
+curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+$data = curl_exec($ch);
+curl_close($ch);
+$json = json_decode($data,1);
+$name = $json['broadcastName'];
+$mp3 = $json['broadcastPlayUrlHighMp3'];
+header("location:$mp3");
+//echo $mp3;
